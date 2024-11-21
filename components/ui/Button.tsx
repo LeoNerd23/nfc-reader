@@ -32,15 +32,31 @@ export interface ButtonProps
   extends TouchableOpacityProps,
     VariantProps<typeof buttonVariants> {
   children: React.ReactNode;
+  textClassName?: string;
 }
 
-const Button: React.FC<ButtonProps> = ({ children, variant, size, className, ...props }) => {
+const Button: React.FC<ButtonProps> = ({
+  children,
+  variant,
+  size,
+  className,
+  textClassName,
+  ...props
+}) => {
   return (
     <TouchableOpacity
       {...props}
       className={la(buttonVariants({ variant, size, className }))}
     >
-      <View className="flex-row items-center justify-center space-x-2">{children}</View>
+      <View className="flex-row items-center justify-center gap-3">
+        {React.Children.map(children, (child) =>
+          typeof child === "string" ? (
+            <Text className={la(textClassName)}>{child}</Text>
+          ) : (
+            child
+          )
+        )}
+      </View>
     </TouchableOpacity>
   );
 };
